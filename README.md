@@ -1,9 +1,7 @@
 
-**Author**: [Alhagie Boye](https://www.linkedin.com/in/alhagie-a-boye-0568771aa/)  
-**Event**: [NASA Space Apps Challenge 2025 - Banjul, The Gambia](https://www.spaceappschallenge.org/2025/local-events/banjul/) 
-**Challenge**: [A World Away: Hunting for Exoplanets with AI](https://www.spaceappschallenge.org/2025/challenges/a-world-away-hunting-for-exoplanets-with-ai/) 
-
-Advanced AI-powered classification of planetary candidates using ensemble machine learning
+- **Author**: [Alhagie Boye](https://www.linkedin.com/in/alhagie-a-boye-0568771aa/)
+- **Event**: [NASA Space Apps Challenge 2025 - Banjul, The Gambia](https://www.spaceappschallenge.org/2025/local-events/banjul/)
+- **Challenge**: [A World Away: Hunting for Exoplanets with AI](https://www.spaceappschallenge.org/2025/challenges/a-world-away-hunting-for-exoplanets-with-ai/)
 
 ## Overview
 
@@ -151,16 +149,6 @@ The system is designed for efficient processing:
 - Advanced Model Settings: More granular control over ensemble parameters
 - Enhanced Bulk Upload: Support for additional file formats
 - Multi-Mission Support: Extend to TESS and K2 data
-
-## Competition Advantages
-
-This solution stands out because it:
-
-- Solves Real Problems: Addresses actual NASA challenges
-- Uses Cutting-Edge AI: Latest ensemble methods and feature engineering
-- Provides Practical Value: Web interface for real-world use
-- Demonstrates Scale: Handles large datasets efficiently
-- Shows Innovation: Advanced techniques in astronomical ML
 
 ## Usage Terms
 
