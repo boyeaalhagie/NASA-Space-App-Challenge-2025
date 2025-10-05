@@ -1,21 +1,18 @@
-/* NASA Exoplanet Detection System - Professional Styling */
+/* NASA Exoplanet Detection System */
 
-/* Remove default Streamlit top spacing but allow header padding */
 .block-container {
   padding-top: 1rem;
+  padding-bottom: 1rem;
 }
 
-/* Clean, professional NASA styling */
 .main-header {
   background: #0B3D91;
   color: white;
   padding: 2rem 2rem 2rem 2rem;
-  /* Equal padding on all sides */
   margin: 0 0 2rem 0;
-  border-left: 5px solid #DC2626;
+  border-bottom: 5px solid #DC2626;
   font-family: 'Arial', sans-serif;
   box-sizing: border-box;
-  /* Ensure padding is included in total width */
 }
 
 .main-header h1 {
@@ -23,42 +20,34 @@
   font-size: 2.5rem;
   font-weight: bold;
   margin: 0;
-  /* Small margin below title */
   letter-spacing: 1px;
   padding-top: 2.2rem;
-  /* Remove any default padding */
 }
 
 .main-header p {
   color: #E5E7EB;
   font-size: 1.1rem;
   margin: 0;
-  /* No margin to keep spacing equal */
   padding: 0;
-  /* Remove any default padding */
   text-align: left;
 }
 
 
 
-/* Sidebar styling */
 .sidebar .sidebar-content {
   background: #F8F9FA;
   padding-top: 0;
   margin-top: 0;
 }
 
-/* Remove default Streamlit sidebar top spacing */
 .sidebar .sidebar-content>div {
   padding-top: 0;
 }
 
-/* Ensure sidebar starts at the very top */
 .sidebar {
   padding-top: 0;
 }
 
-/* Input styling */
 .stNumberInput>div>div>input {
   border: 2px solid #0B3D91;
   border-radius: 4px;
@@ -69,7 +58,6 @@
   border-radius: 4px;
 }
 
-/* Button styling */
 .stButton>button {
   background-color: #DC2626;
   color: white;
@@ -84,7 +72,6 @@
   background-color: #B91C1C;
 }
 
-/* Expander styling for better appearance */
 .streamlit-expanderHeader {
   background-color: #0B3D91;
   color: white;
@@ -108,7 +95,6 @@
   padding: 1rem;
 }
 
-/* Success/Error styling */
 .stSuccess {
   background-color: #D1FAE5;
   color: #065F46;
@@ -127,7 +113,6 @@
   border: 1px solid #F59E0B;
 }
 
-/* Section headers */
 .section-header {
   background: #E5E7EB;
   color: #1F2937;
@@ -137,7 +122,6 @@
   font-weight: bold;
 }
 
-/* Metric styling */
 .metric-container {
   background: white;
   padding: 1rem;
@@ -146,7 +130,6 @@
   margin: 0.5rem 0;
 }
 
-/* Chart styling */
 .plot-container {
   background: white;
   padding: 1rem;
@@ -154,16 +137,12 @@
   border-radius: 4px;
 }
 
-/* Video styling for better laptop viewing */
 .stVideo {
   max-width: 600px;
   margin: 0 auto;
 }
 
-/* Responsive design for mobile devices */
 @media (max-width: 768px) {
-
-  /* Main header responsive adjustments */
   .main-header {
     padding: 1rem;
     margin: 0 0 1rem 0;
@@ -180,12 +159,10 @@
     line-height: 1.3;
   }
 
-  /* Adjust sidebar for mobile */
   .sidebar .sidebar-content {
     padding: 0.5rem;
   }
 
-  /* Make expanders more mobile-friendly */
   .streamlit-expanderHeader {
     padding: 0.3rem 0.5rem;
     font-size: 0.9rem;
@@ -195,15 +172,18 @@
     padding: 0.5rem;
   }
 
-  /* Add top spacing on mobile */
   .block-container {
     padding-top: 2rem;
+    padding-bottom: 2rem;
+  }
+
+  /* Make tab text same size as body text on mobile */
+  .stTabs [data-baseweb="tab-list"] button [data-testid="stMarkdownContainer"] p {
+    font-size: 1rem !important;
   }
 }
 
 @media (max-width: 480px) {
-
-  /* Extra small screens */
   .main-header {
     padding: 0.8rem;
   }
@@ -217,10 +197,14 @@
     font-size: 0.8rem;
   }
 
-  /* Section headers for mobile */
   .section-header {
     padding: 0.3rem 0.5rem;
     margin: 0.5rem 0;
     font-size: 0.9rem;
+  }
+
+  /* Make tab text same size as body text on small mobile */
+  .stTabs [data-baseweb="tab-list"] button [data-testid="stMarkdownContainer"] p {
+    font-size: 1rem !important;
   }
 }
