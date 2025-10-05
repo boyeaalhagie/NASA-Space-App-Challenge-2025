@@ -1,7 +1,7 @@
 
-**Author**: [Alhagie Boye](https://www.linkedin.com/in/alhagie-a-boye-0568771aa/)
-**Event**: [NASA Space Apps Challenge 2025 - Banjul, The Gambia](https://www.spaceappschallenge.org/2025/local-events/banjul/)
-**Challenge**: [A World Away: Hunting for Exoplanets with AI](https://www.spaceappschallenge.org/2025/challenges/a-world-away-hunting-for-exoplanets-with-ai/)
+- **Author**: [Alhagie Boye](https://www.linkedin.com/in/alhagie-a-boye-0568771aa/)
+- **Event**: [NASA Space Apps Challenge 2025 - Banjul, The Gambia](https://www.spaceappschallenge.org/2025/local-events/banjul/)
+- **Challenge**: [A World Away: Hunting for Exoplanets with AI](https://www.spaceappschallenge.org/2025/challenges/a-world-away-hunting-for-exoplanets-with-ai/)
 
 ## Overview
 
