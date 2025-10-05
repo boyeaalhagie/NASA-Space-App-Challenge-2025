@@ -402,6 +402,12 @@ class ExoplanetWebApp:
             """)
             st.video("https://youtu.be/TVJmC19juU0")
             st.markdown('</div>', unsafe_allow_html=True)
+            
+            if st.button("Try Predictions on Training Data"):
+                # Open sidebar by setting session state
+                st.session_state.sidebar_state = "expanded"
+                st.rerun()
+            
         
         with tab2:
             st.markdown('<div class="tab-content-container">', unsafe_allow_html=True)
