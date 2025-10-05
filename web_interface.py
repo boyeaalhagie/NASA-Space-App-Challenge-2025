@@ -19,122 +19,24 @@ import base64
 # Set page config
 st.set_page_config(
     page_title="NASA Exoplanet Detection System",
-    page_icon="🚀",
+    page_icon="nasa.png",
     layout="wide",
     initial_sidebar_state="expanded"
 )
 
-# Professional NASA-style CSS
-st.markdown("""
-<style>
-    /* Clean, professional NASA styling */
-    .main-header {
-        background: #0B3D91;
-        color: white;
-        padding: 2rem;
-        margin-bottom: 2rem;
-        border-left: 5px solid #DC2626;
-        font-family: 'Arial', sans-serif;
-    }
-    
-    .main-header h1 {
-        color: white;
-        font-size: 2.5rem;
-        font-weight: bold;
-        margin: 0;
-        letter-spacing: 1px;
-    }
-    
-    .main-header p {
-        color: #E5E7EB;
-        font-size: 1.1rem;
-        margin: 0.5rem 0 0 0;
-        text-align: left;
-    }
-    
-    /* Logo styling */
-    .main-header img {
-        /* Remove filter to show original logo colors */
-    }
-    
-    /* Sidebar styling */
-    .sidebar .sidebar-content {
-        background: #F8F9FA;
-    }
-    
-    /* Input styling */
-    .stNumberInput > div > div > input {
-        border: 2px solid #0B3D91;
-        border-radius: 4px;
-    }
-    
-    .stSelectbox > div > div {
-        border: 2px solid #0B3D91;
-        border-radius: 4px;
-    }
-    
-    /* Button styling */
-    .stButton > button {
-        background-color: #DC2626;
-        color: white;
-        border: none;
-        border-radius: 4px;
-        padding: 0.5rem 1rem;
-        font-weight: bold;
-        width: 100%;
-    }
-    
-    .stButton > button:hover {
-        background-color: #B91C1C;
-    }
-    
-    /* Success/Error styling */
-    .stSuccess {
-        background-color: #D1FAE5;
-        color: #065F46;
-        border: 1px solid #10B981;
-    }
-    
-    .stError {
-        background-color: #FEE2E2;
-        color: #991B1B;
-        border: 1px solid #EF4444;
-    }
-    
-    .stWarning {
-        background-color: #FEF3C7;
-        color: #92400E;
-        border: 1px solid #F59E0B;
-    }
-    
-    /* Section headers */
-    .section-header {
-        background: #E5E7EB;
-        color: #1F2937;
-        padding: 0.5rem 1rem;
-        margin: 1rem 0 0.5rem 0;
-        border-left: 3px solid #0B3D91;
-        font-weight: bold;
-    }
-    
-    /* Metric styling */
-    .metric-container {
-        background: white;
-        padding: 1rem;
-        border: 1px solid #D1D5DB;
-        border-radius: 4px;
-        margin: 0.5rem 0;
-    }
-    
-    /* Chart styling */
-    .plot-container {
-        background: white;
-        padding: 1rem;
-        border: 1px solid #D1D5DB;
-        border-radius: 4px;
-    }
-</style>
-""", unsafe_allow_html=True)
+# Load external CSS file
+def load_css():
+    """Load external CSS file for styling"""
+    try:
+        with open('styles.css', 'r') as f:
+            css = f.read()
+        return css
+    except FileNotFoundError:
+        st.warning("CSS file not found. Using default styling.")
+        return ""
+
+# Apply CSS styling
+st.markdown(f'<style>{load_css()}</style>', unsafe_allow_html=True)
 
 class ExoplanetWebApp:
     """Web application for exoplanet classification"""
@@ -160,43 +62,40 @@ class ExoplanetWebApp:
                 self.model = joblib.load('trained_ensemble_model.pkl')
                 # Model loaded silently
             else:
-                st.warning("⚠️ Model not found. Please train the model first.")
+                st.warning("Model not found. Please train the model first.")
         except Exception as e:
-            st.error(f"❌ Error loading model: {e}")
+            st.error(f"Error loading model: {e}")
     
     def create_input_form(self):
-        """Create input form for new predictions"""
+        """Create input form for new predictions - optimized with st.expander() for fast collapsible sections"""
         st.sidebar.markdown('<div class="section-header">Input Parameters</div>', unsafe_allow_html=True)
         
-        # Core transit parameters
-        st.sidebar.markdown('<div class="section-header">Transit Parameters</div>', unsafe_allow_html=True)
-        period = st.sidebar.number_input("Orbital Period (days)", min_value=0.1, max_value=1000.0, value=10.0, step=0.1)
-        duration = st.sidebar.number_input("Transit Duration (hours)", min_value=0.1, max_value=100.0, value=5.0, step=0.1)
-        depth = st.sidebar.number_input("Transit Depth (ppm)", min_value=1.0, max_value=100000.0, value=1000.0, step=10.0)
-        impact = st.sidebar.number_input("Impact Parameter", min_value=0.0, max_value=1.0, value=0.5, step=0.01)
-        ror = st.sidebar.number_input("Planet-Star Radius Ratio", min_value=0.001, max_value=1.0, value=0.1, step=0.01)
-        prad = st.sidebar.number_input("Planetary Radius (Earth radii)", min_value=0.1, max_value=50.0, value=2.0, step=0.1)
-        teq = st.sidebar.number_input("Equilibrium Temperature (K)", min_value=100.0, max_value=3000.0, value=300.0, step=10.0)
-        insol = st.sidebar.number_input("Insolation Flux (Earth flux)", min_value=0.1, max_value=10000.0, value=100.0, step=1.0)
+        # Use st.expander for fast, native collapsible sections (no st.rerun() needed!)
+        with st.sidebar.expander("Transit Parameters", expanded=False):
+            period = st.number_input("Orbital Period (days)", min_value=0.1, max_value=1000.0, value=10.0, step=0.1)
+            duration = st.number_input("Transit Duration (hours)", min_value=0.1, max_value=100.0, value=5.0, step=0.1)
+            depth = st.number_input("Transit Depth (ppm)", min_value=1.0, max_value=100000.0, value=1000.0, step=10.0)
+            impact = st.number_input("Impact Parameter", min_value=0.0, max_value=1.0, value=0.5, step=0.01)
+            ror = st.number_input("Planet-Star Radius Ratio", min_value=0.001, max_value=1.0, value=0.1, step=0.01)
+            prad = st.number_input("Planetary Radius (Earth radii)", min_value=0.1, max_value=50.0, value=2.0, step=0.1)
+            teq = st.number_input("Equilibrium Temperature (K)", min_value=100.0, max_value=3000.0, value=300.0, step=10.0)
+            insol = st.number_input("Insolation Flux (Earth flux)", min_value=0.1, max_value=10000.0, value=100.0, step=1.0)
         
-        # Stellar properties
-        st.sidebar.markdown('<div class="section-header">Stellar Properties</div>', unsafe_allow_html=True)
-        teff = st.sidebar.number_input("Stellar Temperature (K)", min_value=2000.0, max_value=10000.0, value=6000.0, step=100.0)
-        srad = st.sidebar.number_input("Stellar Radius (Solar radii)", min_value=0.1, max_value=10.0, value=1.0, step=0.1)
-        smass = st.sidebar.number_input("Stellar Mass (Solar mass)", min_value=0.1, max_value=5.0, value=1.0, step=0.1)
-        slog = st.sidebar.number_input("Stellar Surface Gravity (log10)", min_value=3.0, max_value=5.0, value=4.4, step=0.1)
-        smet = st.sidebar.number_input("Stellar Metallicity (dex)", min_value=-1.0, max_value=1.0, value=0.0, step=0.1)
+        with st.sidebar.expander("Stellar Properties", expanded=False):
+            teff = st.number_input("Stellar Temperature (K)", min_value=2000.0, max_value=10000.0, value=6000.0, step=100.0)
+            srad = st.number_input("Stellar Radius (Solar radii)", min_value=0.1, max_value=10.0, value=1.0, step=0.1)
+            smass = st.number_input("Stellar Mass (Solar mass)", min_value=0.1, max_value=5.0, value=1.0, step=0.1)
+            slog = st.number_input("Stellar Surface Gravity (log10)", min_value=3.0, max_value=5.0, value=4.4, step=0.1)
+            smet = st.number_input("Stellar Metallicity (dex)", min_value=-1.0, max_value=1.0, value=0.0, step=0.1)
         
-        # Signal quality
-        st.sidebar.markdown('<div class="section-header">Signal Quality</div>', unsafe_allow_html=True)
-        snr = st.sidebar.number_input("Signal-to-Noise Ratio", min_value=1.0, max_value=1000.0, value=20.0, step=1.0)
+        with st.sidebar.expander("Signal Quality", expanded=False):
+            snr = st.number_input("Signal-to-Noise Ratio", min_value=1.0, max_value=1000.0, value=20.0, step=1.0)
         
-        # False positive flags
-        st.sidebar.markdown('<div class="section-header">False Positive Flags</div>', unsafe_allow_html=True)
-        fp_nt = st.sidebar.selectbox("Not Transit-like Flag", [0, 1], format_func=lambda x: "No" if x == 0 else "Yes")
-        fp_ss = st.sidebar.selectbox("Stellar Eclipse Flag", [0, 1], format_func=lambda x: "No" if x == 0 else "Yes")
-        fp_co = st.sidebar.selectbox("Centroid Offset Flag", [0, 1], format_func=lambda x: "No" if x == 0 else "Yes")
-        fp_ec = st.sidebar.selectbox("Ephemeris Match Flag", [0, 1], format_func=lambda x: "No" if x == 0 else "Yes")
+        with st.sidebar.expander("False Positive Flags", expanded=False):
+            fp_nt = st.selectbox("Not Transit-like Flag", [0, 1], format_func=lambda x: "No" if x == 0 else "Yes")
+            fp_ss = st.selectbox("Stellar Eclipse Flag", [0, 1], format_func=lambda x: "No" if x == 0 else "Yes")
+            fp_co = st.selectbox("Centroid Offset Flag", [0, 1], format_func=lambda x: "No" if x == 0 else "Yes")
+            fp_ec = st.selectbox("Ephemeris Match Flag", [0, 1], format_func=lambda x: "No" if x == 0 else "Yes")
         
         return {
             'koi_period': period,
@@ -318,14 +217,32 @@ class ExoplanetWebApp:
         with col3:
             # Color code based on prediction
             if prediction_label == "CONFIRMED":
-                st.success("🟢 Confirmed Exoplanet!")
+                st.markdown("""
+                <div style="background: linear-gradient(135deg, #D1FAE5 0%, #A7F3D0 100%); 
+                           color: #065F46; padding: 1rem; border-radius: 8px; text-align: center; 
+                           font-weight: bold; border: 2px solid #10B981;">
+                    <span style="color: #10B981; font-weight: bold;">CONFIRMED EXOPLANET</span>
+                </div>
+                """, unsafe_allow_html=True)
             elif prediction_label == "CANDIDATE":
-                st.warning("🟡 Planetary Candidate")
+                st.markdown("""
+                <div style="background: linear-gradient(135deg, #FEF3C7 0%, #FDE68A 100%); 
+                           color: #92400E; padding: 1rem; border-radius: 8px; text-align: center; 
+                           font-weight: bold; border: 2px solid #F59E0B;">
+                    <span style="color: #F59E0B; font-weight: bold;">PLANETARY CANDIDATE</span>
+                </div>
+                """, unsafe_allow_html=True)
             else:
-                st.error("🔴 False Positive")
+                st.markdown("""
+                <div style="background: linear-gradient(135deg, #FEE2E2 0%, #FECACA 100%); 
+                           color: #991B1B; padding: 1rem; border-radius: 8px; text-align: center; 
+                           font-weight: bold; border: 2px solid #EF4444;">
+                    <span style="color: #EF4444; font-weight: bold;">FALSE POSITIVE</span>
+                </div>
+                """, unsafe_allow_html=True)
         
         # Probability distribution
-        st.subheader("📊 Prediction Probabilities")
+        st.subheader("Prediction Probabilities")
         
         # Create probability bar chart
         fig = go.Figure(data=[
@@ -346,7 +263,7 @@ class ExoplanetWebApp:
     
     def display_feature_importance(self):
         """Display feature importance if available"""
-        st.subheader("🔍 Feature Importance")
+        st.subheader("Feature Importance")
         
         # Mock feature importance (replace with actual from your model)
         features = [
@@ -376,14 +293,6 @@ class ExoplanetWebApp:
         """Add advanced features to the web interface"""
         st.sidebar.markdown('<div class="section-header">Advanced Options</div>', unsafe_allow_html=True)
         
-        # Model statistics
-        with st.sidebar.expander("Model Statistics"):
-            st.metric("Ensemble Accuracy", "92.5%")
-            st.metric("XGBoost Accuracy", "92.9%")
-            st.metric("LightGBM Accuracy", "92.8%")
-            st.metric("CatBoost Accuracy", "92.2%")
-            st.metric("Training Samples", "9,564")
-            st.metric("Features Used", "31")
         
         # Hyperparameter tuning
         with st.sidebar.expander("Model Settings"):
@@ -402,7 +311,7 @@ class ExoplanetWebApp:
             if uploaded_file is not None:
                 try:
                     bulk_data = pd.read_csv(uploaded_file)
-                    st.success(f"✅ Uploaded {len(bulk_data)} records")
+                    st.success(f"Uploaded {len(bulk_data)} records")
                     
                     if st.button("Predict All"):
                         st.info("Processing bulk predictions...")
@@ -430,36 +339,91 @@ class ExoplanetWebApp:
         self.add_advanced_features()
         
         # Predict button
-        st.sidebar.markdown('<div class="section-header">Analysis</div>', unsafe_allow_html=True)
-        if st.sidebar.button("Classify Object", type="primary"):
+        if st.sidebar.button("Run Prediction", type="primary"):
             with st.spinner("Analyzing data..."):
                 prediction, probabilities = self.make_prediction(input_data)
                 
                 if prediction is not None:
-                    st.success("✅ Prediction complete!")
+                    st.success("Prediction complete!")
                     self.display_results(prediction, probabilities)
         
         # Main content area
-        tab1, tab2, tab3 = st.tabs(["About", "Model Information", "Dataset Statistics"])
+        tab1, tab2, tab3, tab4 = st.tabs(["About", "System Overview", "Model Info", "User Guidance"])
         
         with tab1:
+            st.markdown('<div class="tab-content-container">', unsafe_allow_html=True)
+            
+            st.header("🌌 What is an Exoplanet?")
+            st.markdown("""
+            An **exoplanet** (or extrasolar planet) is a planet that orbits a star outside our Solar System. 
+            The first confirmed detection of an exoplanet was in 1992, and since then, astronomers have 
+            discovered thousands of these distant worlds, revealing an incredible diversity of planetary systems.
+            
+            Studying exoplanets helps us understand:
+            - How planets form and evolve
+            - The variety of planetary systems in our galaxy
+            - The potential for life beyond Earth
+            - The distribution of planet types and sizes
+            """)
+            
+            st.header("How Do We Detect Exoplanets?")
+            st.markdown("""
+            Detecting exoplanets is extremely challenging because they are:
+            - **Incredibly far away** (light-years from Earth)
+            - **Much smaller than stars** (planets are typically 1000x smaller)
+            - **Very dim** compared to their host stars (planets don't produce their own light)
+            
+            ##### The Transit Method (Like an Eclipse in Space) - Used by [Kepler](https://science.nasa.gov/mission/kepler/)
+            
+            Imagine you're watching a bright light bulb (a star) from far away. If a small fly (a planet) flies directly in front of the light bulb, the light would get slightly dimmer for a moment. That's exactly how we detect exoplanets!
+            
+            **Simple Explanation:**
+            - **What happens**: A planet blocks a tiny bit of the star's light as it passes in front
+            - **What we measure**: The star gets very slightly dimmer (like turning down a light by 0.01%)
+            - **Why it works**: We can detect this tiny change using very sensitive telescopes
+            - **What we learn**: How big the planet is, how long it takes to orbit, and sometimes what's in its atmosphere
+            
+            **Why This Method is Perfect for Finding Earth-like Planets:**
+            - **Sensitive enough**: Can detect planets as small as Earth
+            - **Works on many stars**: Can watch 150,000+ stars at the same time
+            - **Gives us data**: Creates the massive datasets needed for machine learning
+            - **Proven success**: Kepler found thousands of planet candidates using this method
+            """)
+            
+            # Embed the YouTube video with reduced size
+            st.markdown("### Exoplanet Transit Animation - Planet Passing in Front of Star")
+            st.markdown("""
+            **This video shows:**
+            - An exoplanet orbiting around its star
+            - The planet passing directly in front of the star (transit)
+            - The star's light dimming as the planet blocks it
+            
+            *See the transit method in action - the same technique that generated our training data!*
+            """)
+            st.video("https://youtu.be/TVJmC19juU0")
+            st.markdown('</div>', unsafe_allow_html=True)
+        
+        with tab2:
+            st.markdown('<div class="tab-content-container">', unsafe_allow_html=True)
             st.header("System Overview")
             st.markdown("""
-            The NASA Exoplanet Detection System uses machine learning to automatically classify planetary candidates from the Kepler mission. This system addresses the challenge of manually reviewing thousands of potential exoplanet signals.
+            This NASA Exoplanet Detection System uses advanced machine learning to automatically classify 
+            planetary candidates from the Kepler mission data, helping astronomers prioritize which 
+            candidates deserve further study.
             
             **Technical Features:**
-            - Ensemble machine learning (XGBoost, LightGBM, CatBoost)
-            - Feature engineering based on astronomical domain knowledge
-            - Real-time classification with confidence scoring
-            - Interpretable results and feature importance analysis
-            - Bulk data processing capabilities
-            - Hyperparameter optimization interface
+            - **Ensemble Learning**: Combines XGBoost, LightGBM, and CatBoost models
+            - **Feature Engineering**: 31 astronomical parameters optimized for exoplanet detection
+            - **Real-time Analysis**: Instant predictions with confidence scores
+            - **Interpretable Results**: Feature importance and probability distributions
+            - **Bulk Processing**: Handle large datasets for research teams
+            - **Hyperparameter Tuning**: Customize model weights for specific research goals
             
             **Classification Categories:**
-            - **CONFIRMED**: Validated exoplanet
-            - **CANDIDATE**: Potential exoplanet requiring further study
-            - **FALSE POSITIVE**: Not a real exoplanet
-            """)
+            - <span style="color: #10B981; font-weight: bold;">**CONFIRMED**</span>: Validated exoplanet with high confidence
+            - <span style="color: #F59E0B; font-weight: bold;">**CANDIDATE**</span>: Potential exoplanet requiring further study
+            - <span style="color: #EF4444; font-weight: bold;">**FALSE POSITIVE**</span>: Not a real exoplanet (stellar activity, binary stars, etc.)
+            """, unsafe_allow_html=True)
             
             st.header("Parameter Impact Analysis")
             st.markdown("""
@@ -485,8 +449,10 @@ class ExoplanetWebApp:
             - **Centroid Offset**: Background eclipsing binaries
             - **Ephemeris Match**: Known variable stars
             """)
+            st.markdown('</div>', unsafe_allow_html=True)
         
-        with tab2:
+        with tab3:
+            st.markdown('<div class="tab-content-container">', unsafe_allow_html=True)
             st.header("Model Information")
             st.markdown("""
             **Model Architecture:**
@@ -495,15 +461,61 @@ class ExoplanetWebApp:
             - **CatBoost**: Robust boosting with built-in categorical handling
             
             **Performance:**
-            - **Accuracy**: 95%+ on validation data
-            - **Training Time**: <15 minutes on supercomputer
+            - **Ensemble Accuracy**: 92.5% on validation data
+            - **XGBoost Accuracy**: 92.9%
+            - **LightGBM Accuracy**: 92.8%
+            - **CatBoost Accuracy**: 92.2%
+            - **Training Time**: ~15 minutes on high-performance computing
             - **Prediction Speed**: <100ms per classification
             """)
             
             self.display_feature_importance()
+            
+            st.header("Dataset Statistics")
+            st.markdown("""
+            The model is trained on the Kepler Objects of Interest (KOI) dataset, which contains 
+            observations from NASA's Kepler space telescope. This dataset represents one of the 
+            most comprehensive exoplanet surveys ever conducted.
+            """)
+            
+            # Enhanced statistics
+            col1, col2, col3 = st.columns(3)
+            
+            with col1:
+                st.metric("Total Candidates", "9,564")
+                st.metric("Confirmed Planets", "2,345")
+                st.metric("Success Rate", "24.5%")
+            
+            with col2:
+                st.metric("Planetary Candidates", "2,418")
+                st.metric("False Positives", "4,801")
+                st.metric("Pending Review", "56.6%")
+            
+            with col3:
+                st.metric("Features Used", "31")
+                st.metric("Model Accuracy", "92.5%")
+                st.metric("Training Time", "5 min")
+            
+            st.markdown("""
+            **Key Statistics from the Training Data:**
+            - **Average Orbital Period**: ~30 days
+            - **Average Transit Depth**: ~1000 ppm
+            - **Average Stellar Temperature**: ~5500 K
+            - **Mission Duration**: 4 years of continuous observations
+            - **Stars Monitored**: ~150,000 stars
+            
+            These statistics provide context for the model's training and the distribution 
+            of exoplanet types in the Kepler mission's observations.
+            """)
+            st.markdown('</div>', unsafe_allow_html=True)
         
-        with tab3:
+        with tab4:
+            st.markdown('<div class="tab-content-container">', unsafe_allow_html=True)
             st.header("User Guidance")
+            st.markdown("""
+            This tool is designed for both seasoned researchers and curious beginners interested in exoplanet discovery. 
+            Choose your experience level below to get tailored guidance for using the system effectively.
+            """)
             
             # Researcher vs Novice guidance
             col1, col2 = st.columns(2)
@@ -512,54 +524,48 @@ class ExoplanetWebApp:
                 st.subheader("For Researchers")
                 st.markdown("""
                 **Advanced Features:**
-                - Upload CSV files with bulk data
-                - Adjust ensemble weights for custom models
-                - View detailed model statistics
-                - Export prediction results
+                - **Bulk Upload**: Process large datasets using the CSV upload feature
+                - **Hyperparameter Tuning**: Adjust ensemble weights in Model Settings
+                - **Feature Analysis**: View detailed feature importance in Model Information
+                - **Export Results**: Download prediction results for further analysis
                 
                 **Recommended Workflow:**
-                1. Use bulk upload for large datasets
-                2. Adjust parameters based on domain knowledge
-                3. Validate predictions with follow-up observations
-                4. Contribute new data to improve model accuracy
+                1. **Data Preparation**: Ensure your data matches the required input format
+                2. **Bulk Processing**: Use the upload feature for large candidate lists
+                3. **Parameter Adjustment**: Fine-tune model weights based on your research focus
+                4. **Validation**: Cross-reference predictions with known exoplanet catalogs
+                5. **Follow-up**: Prioritize high-confidence candidates for observational studies
+                
+                **Pro Tips:**
+                - Focus on candidates with Signal-to-Noise Ratio > 20
+                - Pay attention to false positive flags in your data
+                - Use the feature importance analysis to guide parameter selection
+                - Consider the ensemble confidence scores for candidate prioritization
                 """)
             
             with col2:
                 st.subheader("For Beginners")
                 st.markdown("""
                 **Getting Started:**
-                - Use the sidebar to input basic parameters
-                - Start with typical values (see tooltips)
-                - Focus on Signal-to-Noise Ratio > 20
-                - Check False Positive Flags = "No"
+                - **Explore Parameters**: Use the sidebar sliders to understand each input parameter
+                - **Start Simple**: Begin with typical values shown in the tooltips
+                - **Watch the Video**: Check out the exoplanet explanation video in the About tab
+                - **Learn the Science**: Read about parameter impacts in the About section
                 
                 **Understanding Results:**
-                - 🟢 Green = Confirmed exoplanet
-                - 🟡 Yellow = Needs more study
-                - 🔴 Red = Not a real planet
-                - Higher confidence = more reliable
-                """)
-            
-            st.header("Dataset Statistics")
-            
-            # Enhanced statistics
-            col1, col2, col3 = st.columns(3)
-            
-            with col1:
-                st.metric("Total Candidates", "9,564")
-                st.metric("Confirmed Planets", "2,662")
-                st.metric("Success Rate", "27.8%")
-            
-            with col2:
-                st.metric("Candidates", "5,411")
-                st.metric("False Positives", "1,491")
-                st.metric("Pending Review", "56.6%")
-            
-            with col3:
-                st.metric("Features Used", "31")
-                st.metric("Model Accuracy", "92.5%")
-                st.metric("Training Time", "5 min")
-
+                - <span style="color: #10B981; font-weight: bold;">**Green (CONFIRMED)**</span>: High-confidence exoplanet detection
+                - <span style="color: #F59E0B; font-weight: bold;">**Yellow (CANDIDATE)**</span>: Potential planet requiring further study
+                - <span style="color: #EF4444; font-weight: bold;">**Red (FALSE POSITIVE)**</span>: Not a real exoplanet
+                - **Confidence Score**: Higher percentage = more reliable prediction
+                
+                **Learning Path:**
+                1. **Watch the Video**: Start with the exoplanet explanation
+                2. **Read About**: Understand the science behind the parameters
+                3. **Experiment**: Try different parameter combinations
+                4. **Analyze Results**: Learn to interpret the predictions
+                5. **Explore Further**: Dive into the model information when ready    
+                """, unsafe_allow_html=True)
+                st.markdown('</div>', unsafe_allow_html=True)
 def main():
     """Main function to run the app"""
     app = ExoplanetWebApp()
