@@ -28,7 +28,7 @@ This project implements an ensemble machine learning system for classifying exop
 ## Quick Start
 
 ### Option 1: Use Online Version
-The application is hosted and ready to use at: **https://exonet-ai.streamlit.app/**
+The application is hosted and ready to use at: **https://exonet.streamlit.app/**
 
 ### Option 2: Run Locally
 
